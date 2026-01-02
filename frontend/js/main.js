@@ -1,4 +1,3 @@
- 
 import * as Login from './login.js';
 import * as Contact from './contact.js';
 import * as Breathing from './stress/breathing.js';
@@ -14,12 +13,15 @@ import * as Bubble from './games/bubblepop.js';
 import * as Color from './games/colorgame.js';
 import { store } from './storage.js';
 
+// ✅ Added Render backend URL
+export const BASE_URL = "https://stress-management-backend.onrender.com";
+
 export function showPage(id){ document.querySelectorAll('main section').forEach(sec => sec.classList.add('hidden')); const el=document.getElementById(id); if (el) el.classList.remove('hidden'); }
 export function toggleSidebar(){ document.getElementById('sidebar') && document.getElementById('sidebar').classList.toggle('hidden'); }
 
 function initTabs(){ const btns = Array.from(document.querySelectorAll('.strategy-tab')); btns.forEach(btn=> btn.addEventListener('click', ()=>{ btns.forEach(b=>b.classList.remove('active')); document.querySelectorAll('.strategy-panel').forEach(p=>p.classList.remove('show')); btn.classList.add('active'); const id = btn.dataset.target; document.getElementById(`panel-${id}`) && document.getElementById(`panel-${id}`).classList.add('show'); })); }
 
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded', ()=>{ 
   // UI wiring
   initTabs();
 
@@ -38,12 +40,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
   document.getElementById('registerBtn')?.addEventListener('click', Login.handleRegister);
 
   // earn points and add post (peer support)
-  document.getElementById('earnPointsBtn')?.addEventListener('click', ()=>{
-    const pEl=document.getElementById('points'); const profEl=document.getElementById('pointsProfile'); let cur = parseInt(pEl?.textContent||'0',10) || 0; cur += 10; if(pEl) pEl.textContent = cur; if(profEl) profEl.textContent = cur; localStorage.setItem('points', JSON.stringify(cur));
-  });
-  document.getElementById('addPostBtn')?.addEventListener('click', ()=>{
-    const txt = (document.getElementById('postInput')?.value||'').trim(); if (!txt) return alert('Please write something to post.'); const ul=document.getElementById('postsList'); const li=document.createElement('li'); li.textContent = txt; if (ul) ul.prepend(li); document.getElementById('postInput').value='';
-  });
+  document.getElementById('earnPointsBtn')?.addEventListener('click', ()=>{ const pEl=document.getElementById('points'); const profEl=document.getElementById('pointsProfile'); let cur = parseInt(pEl?.textContent||'0',10) || 0; cur += 10; if(pEl) pEl.textContent = cur; if(profEl) profEl.textContent = cur; localStorage.setItem('points', JSON.stringify(cur)); });
+  document.getElementById('addPostBtn')?.addEventListener('click', ()=>{ const txt = (document.getElementById('postInput')?.value||'').trim(); if (!txt) return alert('Please write something to post.'); const ul=document.getElementById('postsList'); const li=document.createElement('li'); li.textContent = txt; if (ul) ul.prepend(li); document.getElementById('postInput').value=''; });
 
   // initialize points display
   try{ const pts = JSON.parse(localStorage.getItem('points')) || 0; document.getElementById('points') && (document.getElementById('points').textContent = pts); document.getElementById('pointsProfile') && (document.getElementById('pointsProfile').textContent = pts); }catch(e){}
