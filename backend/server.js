@@ -40,7 +40,6 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
-
   next();
 });
 
@@ -68,9 +67,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const frontendPath = path.join(__dirname, "../frontend");
 
+// Serve all frontend static files (CSS, JS, images)
 app.use(express.static(frontendPath));
 
-app.get(/.*/, (req, res) => {
+// Catch-all route: send index.html for any other route
+app.get("*", (req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
